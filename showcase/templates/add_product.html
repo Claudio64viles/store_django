@@ -1,0 +1,201 @@
+{% extends 'base_layout.html' %}
+
+{% block body %}
+
+
+<form class="needs-validation py-6" method="post" novalidate>{% csrf_token %}
+  <div class="form-group">
+    <label>Product Name</label>
+    <input class="form-control" id="nameTxt" name="nameTxt" placeholder="Enter product name" required>
+    <div class="valid-feedback">
+      Looks good!
+    </div>
+    <div class="invalid-feedback">
+      Please insert a name.
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Category</label>
+    <a href="javascript:loadSubcategories(0)" class="badge badge-info"> Reset </a>
+    <!--<a href="javascript:newCategory()" class="badge badge-info"> New Category </a> -->
+    <!--<a href="#newCategory" data-toggle="modal" class="badge badge-info">New Category</a>-->
+    <a href="javascript:newCategoryModal()" class="badge badge-info">New Category</a>
+    <div class="h6" id="previousCategoryTxt"></div>
+    <select class="form-control" id="categorySelect" name="categorySelect" required>
+      <option value="">-</option>
+      {% for c in categories %}
+      <option value={{ c.id }}>{{ c.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div id="loadFeatures">
+  </div>
+  <div class="form-group">
+    <label>MSRP</label>
+    <input type="number" class="form-control" id="msrpTxt" name="msrpTxt" placeholder="Enter product MSRP value">
+  </div>
+  <div class="form-group">
+    <label>Price</label>
+    <input type="number" class="form-control" id="priceTxt" name="priceTxt" placeholder="Enter price value">
+  </div>
+  <div class="form-group">
+    <label>Brand</label>
+    <a href="javascript:newBrandModal()" class="badge badge-info">New Brand</a>
+    <select class="form-control" id="brandSelect" name="brandSelect">
+      {% for b in brands %}
+      <option value={{ b.id }}>{{ b.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="form-group">
+    <label>Manufacturer</label>
+    <a href="javascript:newManufacturerModal()" class="badge badge-info">New Manufacturer</a>
+    <select class="form-control" id="manufacturerSelect" name="manufacturerSelect">
+      {% for m in manufacturers %}
+      <option value={{ m.id }}>{{ m.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="form-group">
+    <label>Distributor</label>
+    <a href="javascript:newDistributorModal()" class="badge badge-info">New Distributor</a>
+    <select class="form-control" id="distributorSelect" name="distributorSelect">
+      {% for d in distributors %}
+      <option value={{ d.id }}>{{ d.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="form-group">
+    <label>Description</label>
+    <textarea class="form-control" id="descriptionTxtArea" name="descriptionTxtArea" rows="3"></textarea>
+  </div>
+  <div class="form-group">
+    <label>Release date</label>
+    <input type="date" class="form-control" id="dateTxt" name="dateTxt">
+  </div>
+  <div class="form-group">
+    <label>Units</label>
+    <input type="number" class="form-control" id="unitsTxt" name="unitsTxt" placeholder="Enter products number value">
+  </div>
+  <button type="submit" class="btn btn-primary btn-block">Save</button>
+</form>
+
+<!--New Category Form -->
+<div id="newCategory" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog"
+  aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg m-6 p-6">
+
+    <div class="modal-content">
+      <div class="modal-body">
+        <form class="needs-validation py-6" method="post" novalidate>{% csrf_token %}
+          <div class="form-group">
+            <label>Category Name</label>
+            <input class="form-control" id="categoryNameTxt" name="categoryNameTxt" placeholder="Enter category name"
+              required>
+            <div class="valid-feedback">
+              Looks good!
+            </div>
+            <div class="invalid-feedback">
+              Please insert a name.
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Category Parent</label>
+            <select class="form-control" id="categorySelectAll" name="categorySelectAll">
+              <option value="">-</option>
+            </select>
+          </div>
+
+          <button type="submit" id="addCategorySaveButton" class="btn btn-primary btn-block">Save</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!--New Brand Form-->
+<div id="newBrand" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog"
+  aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg m-6 p-6">
+
+    <div class="modal-content">
+      <div class="modal-body">
+        <form class="needs-validation py-6" method="post" novalidate>{% csrf_token %}
+          <div class="form-group">
+            <label>Brand Name</label>
+            <input class="form-control" id="brandNameTxt" name="brandNameTxt" placeholder="Enter brand name" required>
+            <div class="valid-feedback">
+              Looks good!
+            </div>
+            <div class="invalid-feedback">
+              Please insert a name.
+            </div>
+          </div>
+
+          <button type="submit" id="addBrandSaveButton" class="btn btn-primary btn-block">Save</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!--New Manufacturer Form-->
+<div id="newManufacturer" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog"
+  aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg m-6 p-6">
+
+    <div class="modal-content">
+      <div class="modal-body">
+        <form class="needs-validation py-6" method="post" novalidate>{% csrf_token %}
+          <div class="form-group">
+            <label>Manufacturer Name</label>
+            <input class="form-control" id="manufacturerNameTxt" name="manufacturerNameTxt" placeholder="Enter manufacturer name" required>
+            <div class="valid-feedback">
+              Looks good!
+            </div>
+            <div class="invalid-feedback">
+              Please insert a name.
+            </div>
+          </div>
+
+          <button type="submit" id="addManufacturerSaveButton" class="btn btn-primary btn-block">Save</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!--New Distributor Form-->
+<div id="newDistributor" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog"
+  aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg m-6 p-6">
+
+    <div class="modal-content">
+      <div class="modal-body">
+        <form class="needs-validation py-6" method="post" novalidate>{% csrf_token %}
+          <div class="form-group">
+            <label>Distributor Name</label>
+            <input class="form-control" id="distributorNameTxt" name="distributorNameTxt" placeholder="Enter distributor name" required>
+            <div class="valid-feedback">
+              Looks good!
+            </div>
+            <div class="invalid-feedback">
+              Please insert a name.
+            </div>
+          </div>
+
+          <button type="submit" id="addDistributorSaveButton" class="btn btn-primary btn-block">Save</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}
+
+{% block extras %}
+{% load static %}
+<script src="{% static 'js/add_product.js' %}"></script>
+{% endblock %}

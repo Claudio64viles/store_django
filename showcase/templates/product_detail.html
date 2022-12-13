@@ -1,0 +1,68 @@
+{% extends 'base_layout.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% block body %}
+        <div class="h2 text-left py-2">Features: </div>
+        
+        <table class="table table-striped border rounded py-2">
+            <thead>
+                <tr>
+                    <th scope="col">Feature name</th>
+                    <th scope="col">Feature value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">Product Name</th>
+                    <td>{{ product.name }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Category</th>
+                    <td>{{ product.category.name }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Price</th>
+                    <td>{{ product.price }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Product description</th>
+                    <td>{{ product.description }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Brand</th>
+                    <td>{{ product.brand.name }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">MSRP</th>
+                    <td>{{ product.msrp }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Manufacturer</th>
+                    <td>{{ product.manufacturer.name }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Distributor</th>
+                    <td>{{ product.distributor }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Units</th>
+                    <td>{{ product.units }}</td>
+                </tr>
+                {% for f in featureValues %}
+                    <tr class="table-dark">
+                        <th scope="row">{{ f.feature.name}}</th>
+                        <td >{{ f.value}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endblock %}
+</body>
+</html>

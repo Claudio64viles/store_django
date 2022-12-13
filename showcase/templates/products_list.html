@@ -1,0 +1,80 @@
+{% extends 'base_layout.html' %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% block body %}
+    <div class="h2 text-center py-2">All Products</div>
+    <table class="table table-striped border rounded">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Description</th>
+                <th>Manufacturer</th>            
+                <th>Brand</th>            
+                <th>Distributor</th>            
+                <th>Units</th>            
+                <th>Actions</th>            
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in products %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ p.id }}</td>
+                <td>{{p.name}}</td>
+                <td>{{p.category.name}}</td>
+                <td>{{p.description}}</td>
+                <td>{{p.manufacturer.name}}</td>
+                <td>{{p.brand.name}}</td>
+                <td>{{p.distributor.name}}</td>
+                <td>{{p.units}}</td>
+                <td><a href={% url 'productDetail' p.id %}>Details</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+
+    <div class="mt-2">
+        <ul class="pagination justify-content-center">
+
+            {% if products.has_previous %}
+            <li class="page-item">
+                <a href="?page={{ products.previous_page_number }}" class="page-link">Previous</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a href="#" class="page-link">Previous</a>
+            </li>
+            {% endif %}
+            
+            {% for i in products.paginator.page_range %}
+            <li class="page-item {% if products.number == i %} active {% endif %}">
+                <a href="?page={{ i }}" class="page-link">{{ i }}</a>
+            </li>
+            {% endfor %}
+
+            {% if products.has_next %}
+            <li class="page-item">
+                <a href="?page={{ products.next_page_number }}" class="page-link">Next</a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+
+
+
+
+    {% endblock %}
+</body>
+</html>
