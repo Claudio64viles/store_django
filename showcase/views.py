@@ -207,3 +207,19 @@ def AddDistributor(request): #Add a new distributor in DB
             print('Error creating new distributor : ' + str(e))
 
     return HttpResponse('Success')
+
+def AddFeature(request): #Add a new feature referencing category in DB
+    if request.method == 'POST':
+        try:
+            name = request.POST.get('name')
+            categoryId = request.POST.get('categoryId')
+            feature = Feature.objects.create(
+                name = name,
+                category_id = categoryId,
+            )
+            feature.save()
+            return JsonResponse({'message' : 'Success'})
+        except Exception as e:
+            print('Error creating new distributor : ' + str(e))
+
+    return HttpResponse('Success')

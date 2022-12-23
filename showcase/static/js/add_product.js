@@ -1,9 +1,12 @@
 let previousCategory = ``;
+let categoryIDGlobal = ``;
+let categoryNameGlobal = ``;
 const listeners = async () => {
     categorySelect.addEventListener("change", (event) => {
         if (event.target.value != '') {
             loadSubcategories(event.target.value);
             loadFeatureFormFromCategory(event.target.value);
+            addButtonAddFeature(event.target.value, categorySelect.options[categorySelect.selectedIndex].text);
             previousCategory = categorySelect.options[categorySelect.selectedIndex].text
         }
     });
@@ -37,6 +40,14 @@ const listeners = async () => {
             event.preventDefault();
             console.log('distributor : all ok!');
             newDistributorPost();
+        }       
+    });
+    addFeatureSaveButton.addEventListener("click", (event) => {        
+        if(featureNameTxt.value != '')
+        {
+            event.preventDefault();
+            console.log('feature : all ok!');
+            newFeaturePost();
         }       
     });
 };
@@ -287,6 +298,39 @@ const newManufacturerPost = async () => {
     }
 }
 
+const newFeaturePost = async () => { //Add new feature to category
+    try {
+        const csrftoken = getCookie('csrftoken');
+        const name = featureNameTxt.value;
+        console.log(csrftoken);
+        console.log(name);
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('categoryId', categoryIDGlobal);
+
+        const response = await fetch(`/products/add_feature/`,
+            {
+                method: 'POST',
+                headers: { 'X-CSRFToken': csrftoken },
+                mode: 'same-origin',
+                body: formData,
+            });
+        const data = await response.json();
+
+        if (data.message === "Success") {
+            console.log("It's OK");
+            //console.log(data);
+            //loadManufacturers();
+            featureNameTxt.value = ``;
+            loadFeatureFormFromCategory(categoryIDGlobal);
+            $('#newFeature').modal('hide');
+        }
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
+
 const newDistributorPost = async () => {
     try {
         const csrftoken = getCookie('csrftoken');
@@ -336,6 +380,48 @@ function newManufacturerModal()
 function newDistributorModal()
 {
     $('#newDistributor').modal('show');
+}
+
+function newFeatureModal(id, name)
+{
+    $('#newFeature').modal('show');
+    console.log(id + ' ' + name);
+    //Add title to modal new feature
+    featureModalTitle.innerHTML = `Add new feature to category ${name} [ID:${id}]`;
+    //Set category id and name global
+    categoryIDGlobal = id;
+    categoryNameGlobal = name;
+}
+
+function addButtonAddFeature(categoryID, categoryName)
+{
+    console.log('adding button feature to category');
+    // add_product.html id=categoryInput
+    if(categoryID != 0)
+    {
+        //let ahref = `<a id="categoryInput" href="javascript:newFeatureModal(${categoryID})" class="badge badge-info">Add feature to ${categoryName}</a>`;
+        const newA = document.createElement('a');
+        //newA.innerHTML = ahref;
+        //categoryInput.parentNode.replaceChild(newA, categoryInput);
+        //categoryInput.innerHTML = ahref;
+
+        newA.setAttribute("id", "categoryInput");
+        newA.setAttribute("href", `javascript:newFeatureModal(${categoryID},"${categoryName}")`);
+        newA.setAttribute("class", `badge badge-info`);
+        var text = document.createTextNode(`Add feature to ${categoryName}`);
+        newA.appendChild(text);
+        categoryInput.replaceWith(newA);
+    }
+    else
+    {
+        const newD = document.createElement('a');
+        newD.setAttribute("id", "categoryInput");
+        categoryInput.replaceWith(newD);
+        //Replace category id and name with ''
+        categoryIDGlobal = '';
+        categoryNameGlobal = '';
+    }
+    
 }
 
 
